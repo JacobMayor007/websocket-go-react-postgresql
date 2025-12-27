@@ -71,3 +71,30 @@ export const useLogin = () => {
 
   return { login, loading, alert };
 };
+
+export const useLogout = () => {
+  const [loading, setLoading] = useState(false);
+  const [alert, setAlert] = useState<{
+    message: string;
+    type?: "success" | "error";
+  }>({
+    message: "",
+    type: undefined,
+  });
+
+  const logout = async () => {
+    try {
+      await authService.logoutUser();
+      setAlert({ message: "Logged out successfully!", type: "success" });
+    } catch (error: any) {
+      setAlert({
+        message: error.message || "An error occurred",
+        type: "error",
+      });
+    } finally {
+      setLoading(false);
+      setTimeout(() => setAlert({ message: "", type: undefined }), 3000);
+    }
+  };
+  return { logout, loading, alert };
+};
